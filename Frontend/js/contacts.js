@@ -307,7 +307,6 @@ async function addNotiz() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + 'dein-jwt-token-hier',  // Falls du Authentifizierung benötigst
       },
       body: JSON.stringify(contact),  // Senden der Kontaktdaten als JSON
     });
@@ -317,6 +316,8 @@ async function addNotiz() {
       renderContacts();  // Aktualisieren der Kontakte (falls erforderlich)
       window.location.href = "contacts.html";  // Weiterleitung zur Kontaktseite
     } else {
+      const errorResponse = await response.json();
+      console.error('Fehlerdetails:', errorResponse);
       throw new Error('Fehler beim Hinzufügen des Kontakts');
     }
   } catch (error) {
@@ -351,7 +352,36 @@ async function edit(i) {
   window.location.href = "contacts.html";
 }
 
-/** Load Contact*/
+async function load() {
+  try {
+    // Anfrage an das Backend senden, um die Kontakte abzurufen
+    const response = await fetch('http://127.0.0.1:8000/api/contacts/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // Optional: Falls du eine Authentifizierung benötigst:
+        // 'Authorization': 'Bearer ' + 'dein-jwt-token-hier',
+      }
+    });
+
+    if (response.ok) {
+      // Kontakte erfolgreich abgerufen
+      const contacts = await response.json();  // Die Daten werden als JSON zurückgegeben
+      addContacts = contacts;  // Kontakte in deiner Anwendung speichern
+      renderContacts();  // Funktion aufrufen, um die Kontakte anzuzeigen
+    } else {
+      throw new Error('Fehler beim Abrufen der Kontakte');
+    }
+  } catch (error) {
+    console.error("Fehler beim Laden der Kontakte:", error);
+    // Hier kannst du eine Fehlernachricht anzeigen, wenn das Abrufen der Kontakte fehlschlägt
+  }
+  renderContacts();
+  
+}
+
+
+/** Load Contact*/ /*
 async function load() {
   try {
     addContacts = JSON.parse(await getItem("addContacts")); // Items als json laden
@@ -359,7 +389,7 @@ async function load() {
     console.error("Loading error:", e); // Falls Users nicht gefunden
   }
   renderContacts();
-}
+} */
 
 /** Delet Contacts
  *
@@ -375,11 +405,12 @@ async function deletecontact(i) {
 
 /** Generate Color*/
 function getRandomColor() {
-  const hue = Math.floor(Math.random() * 360); // Zufälliger Farbwert zwischen 0 und 359
-  const saturation = Math.floor(Math.random() * 50) + 50; // Sättigung zwischen 50 und 100
-  const lightness = Math.floor(Math.random() * 20) + 40; // Helligkeit zwischen 40 und 60
-
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;  // Ein Hex-Farbcode wie #A3C9F7
 }
 
 // Auswahl markieren //
