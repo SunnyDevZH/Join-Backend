@@ -1,3 +1,15 @@
 from django.db import models
 
-# Create your models here.
+class Contact(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=20)
+    color = models.CharField(max_length=7)
+    
+    class Meta:
+        app_label = 'contact'
+
+    def __str__(self):
+        return self.name
+    
+    

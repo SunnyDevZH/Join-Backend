@@ -213,7 +213,8 @@ function cancelContact(elementId) {
   }
 }
 
-/** Add Contact*/
+
+/** Add Contact*/ /*
 async function addNotiz() {
   let name = document.getElementById("name").value;
   let email = document.getElementById("email").value;
@@ -258,6 +259,73 @@ async function addNotiz() {
 
   renderContacts();
   window.location.href = "contacts.html";
+} */
+
+/** Add Contact */
+async function addNotiz() {
+  let name = document.getElementById("name").value;
+  let email = document.getElementById("email").value;
+  let phone = document.getElementById("phone").value;
+
+  var messageContainer = document.getElementById("message1");
+
+  if (name.trim() === "" || email.trim() === "" || phone.trim() === "") {
+    messageContainer.style.display = "block"; // Stellen Sie sicher, dass das Nachrichtencontainer sichtbar ist
+
+    var messageElement = document.createElement("p");
+    messageElement.textContent = "Bitte füllen Sie alle Felder aus.";
+    messageContainer.innerHTML = ""; // Löschen Sie den vorherigen Inhalt, falls vorhanden
+    messageContainer.appendChild(messageElement);
+
+    return;
+  }
+
+  // Überprüfen, ob der Kontakt bereits existiert (Optional - Falls du diese Überprüfung noch benötigst)
+  // const contactExists = addContacts.some(
+  //   (contact) =>
+  //     contact.name === name &&
+  //     contact.email === email &&
+  //     contact.phone === phone
+  // );
+
+  // if (contactExists) {
+  //   messageContainer.style.display = "block";
+  //   var messageElement = document.createElement("p");
+  //   messageElement.textContent = "Dieser Kontakt existiert bereits.";
+  //   messageContainer.innerHTML = "";
+  //   messageContainer.appendChild(messageElement);
+  //   return;
+  // }
+
+  let color = getRandomColor();
+
+  let contact = { name, email, phone, color };
+
+  try {
+    // Senden der Daten an das Django-Backend
+    const response = await fetch('http://127.0.0.1:8000/api/contacts/', {  // Achte darauf, den richtigen API-Endpunkt zu verwenden
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + 'dein-jwt-token-hier',  // Falls du Authentifizierung benötigst
+      },
+      body: JSON.stringify(contact),  // Senden der Kontaktdaten als JSON
+    });
+
+    if (response.ok) {
+      // Erfolgreich gespeichert
+      renderContacts();  // Aktualisieren der Kontakte (falls erforderlich)
+      window.location.href = "contacts.html";  // Weiterleitung zur Kontaktseite
+    } else {
+      throw new Error('Fehler beim Hinzufügen des Kontakts');
+    }
+  } catch (error) {
+    messageContainer.style.display = "block";
+    var messageElement = document.createElement("p");
+    messageElement.textContent = "Es gab ein Problem: " + error.message;
+    messageContainer.innerHTML = "";
+    messageContainer.appendChild(messageElement);
+  }
 }
 
 /** Edits
