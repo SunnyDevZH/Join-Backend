@@ -1,0 +1,90 @@
+body{
+    margin: 0;
+}
+.background{
+    background-color: rgb(246,247,248); /* Farbe von Mockup */
+    height: 100vh;
+    padding: 30px; /* Welche Grösse? */
+}
+
+.alignItems{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.signUpHeader{
+    display: flex;
+    justify-content: space-between;
+    padding: 15px; /* Welche Grösse? */
+    align-items: center;
+}
+
+.signUpContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgb(255,255,255);  /* Farbe von Mockup */
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; /* Welchen Style? */
+    border-radius: 30px;/* Welche Grösse? */
+    width: 400px; /* Welche Grösse? */
+    gap: 10px; /* Welche Grösse? */
+    padding: 10px; /* Welche Grösse? */
+}
+
+.flexdirection{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px; /* Welche Grösse? */
+}
+
+button{
+    cursor: pointer;
+    /* Design */
+}
+footer{
+    display: flex;
+    justify-content: center;
+    padding: 10px; /* Welche Grösse? */
+    gap: 30px; /* Welche Grösse? */
+}
+
+.meinBild{
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+#message{
+    color: red;
+    font-size: 10px;
+    display: block;
+}
+
+
+@media (max-width: 650px) {
+    .signUpContainer {
+      width: 320px;
+      height: 400px;
+      padding: 20px;
+    } 
+    .logo{
+        height: 80px;
+        margin-bottom: 20px;
+    }
+    .signUpHeader{
+        padding: 10px;
+    }
+    .background{
+        padding: 0;
+    }
+    footer{
+        margin-top: 10px;
+    }
+    p{
+        display: block;
+    }
+}

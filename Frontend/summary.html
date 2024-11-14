@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Summary</title>
+    <link rel="icon" type="image/x-icon" href="./img/logo_favicon.png" />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body onload="loadPage();updateSummaryCounter(); setNavID('nav01');">
+    <div w3-include-html="./templates/navbar.html"></div>
+    <div w3-include-html="./templates/header.html"></div>
+
+    <div class="container">
+      <div class="sum-header">
+        <h1 class="sum-title">Summary</h1>
+        <p class="fs-24">Everything in a nutshell</p>
+      </div>
+      <div class="sum-main">
+        <div class="sum-greeting">
+          <p id="sum-greet" class="fs-32">Good Morning,</p>
+          <p id="sum-name" class="sum-name">Guest</p>
+        </div>
+        <div class="sum-tasks-container">
+          <div class="sum-tasks">
+            <a class="sum-task-item" href="./board.html">
+              <div class="sum-column">
+                <p id="task-board-counter" class="fs-32 fs-b">5</p>
+                Tasks in<br />Board
+              </div>
+            </a>
+            <a class="sum-task-item" href="./board.html">
+              <div class="sum-column">
+                <p id="todo-inprogress-counter" class="fs-32 fs-b">2</p>
+                Tasks in<br />Progress
+              </div>
+            </a>
+            <a class="sum-task-item" href="./board.html">
+              <div class="sum-column">
+                <p id="todo-await-counter" class="fs-32 fs-b">2</p>
+                Awaiting<br />Feedback
+              </div>
+            </a>
+          </div>
+          <div class="sum-tasks">
+            <a class="sum-task-item" href="./board.html">
+              <img src="./icons/priority_urgent_full.svg" alt="" />
+              <div class="sum-column">
+                <p id="todo-prio-counter" class="fs-32 fs-b">1</p>
+                Urgent
+              </div>
+              <div
+                class="sum-column"
+                style="
+                  text-align: left;
+                  line-height: 1.8;
+                  border-left: 3px solid rgba(0, 0, 0, 0.2);
+                "
+              >
+                <p id="next-date" class="fs-20 fs-b">
+                  No urgent task available
+                </p>
+                Upcoming Deadline
+              </div>
+            </a>
+          </div>
+          <div class="sum-tasks">
+            <a class="sum-task-item" href="./board.html">
+              <div class="sum-column">
+                <p id="todo-open-counter" class="fs-32 fs-b">1</p>
+                Todo
+              </div>
+            </a>
+            <a class="sum-task-item" href="./board.html">
+              <div class="sum-column">
+                <p id="todo-done-counter" class="fs-32 fs-b">1</p>
+                Done
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script src="./js/include.js"></script>
+  <script src="./js/storage.js"></script>
+  <script src="./js/script.js"></script>
+</html>

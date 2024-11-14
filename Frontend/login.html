@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/login.css" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="./img/logo_favicon.png"
+    />
+  </head>
+  <body onload="start()">
+    <div class="background">
+      <header class="loginHeader">
+        <div>
+          <img id="login-logo" src="./img/logo.svg" alt="JOIN" />
+        </div>
+        <div class="signUp">
+          <p>Not a Join user?</p>
+          <button
+            id="signupresp"
+            class="signUpButton"
+            onclick="window.location.href='./signUp.html'"
+          >
+            Sign up
+          </button>
+        </div>
+      </header>
+      <div class="alignItems">
+        <div class="loginContainer">
+          <h1>Log in</h1>
+          <form class="flexdirection" onsubmit="login(); return false;">
+            <div class="displayflex">
+              <input required type="email" id="email" placeholder="Email" />
+              <img
+                class="loginimg"
+                src="./img/mail.png"
+                alt="mail"
+                width="25px"
+              />
+            </div>
+            <div class="displayflex">
+              <input
+                required
+                type="password"
+                id="password"
+                placeholder="Password"
+              />
+              <img
+                class="loginimg"
+                src="./img/login.png"
+                alt="login"
+                width="30px"
+              />
+            </div>
+            <div class="footergap">
+              <div>
+                <input
+                  class="checkbox"
+                  type="checkbox"
+                  name="Remember"
+                  id="remember"
+                /><label for="remember">Remember me</label>
+              </div>
+              <div>
+                <a href="./forgotSend.html">I forgot my password</a>
+              </div>
+            </div>
+            <div id="message2"></div>
+            <div class="loginbutton">
+              <button class="signUpButton">Log in</button>
+              <button onclick="window.location.href= './summary.html';">
+                Guest Log in
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <footer>
+        <a class="footerlink" href="./privacyPolicy.html">Privacy Policy</a>
+        <a class="footerlink" href="./legalNotice.html">Legal notice</a>
+      </footer>
+    </div>
+
+    <script src="./js/register.js"></script>
+    <script src="./js/storage.js"></script>
+    <script src="./js/script.js"></script>
+    <script src="./js/login.js"></script>
+  </body>
+</html>

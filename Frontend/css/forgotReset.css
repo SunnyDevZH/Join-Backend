@@ -1,0 +1,88 @@
+body{
+    margin: 0;
+}
+
+h1{
+    font-size: 35px;
+}
+.background{
+    background-color: rgb(246,247,248); /* Farbe von Mockup */
+    height: 100vh;
+    padding: 30px; /* Welche Grösse? */
+}
+
+.alignItems{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.forgotResetHeader{
+    display: flex;
+    justify-content: space-between;
+    padding: 30px; /* Welche Grösse? */
+    align-items: center;
+}
+
+.forgotResetContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgb(255,255,255);  /* Farbe von Mockup */
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; /* Welchen Style? */
+    border-radius: 30px;/* Welche Grösse? */
+    width: 500px; /* Welche Grösse? */
+    gap: 30px; /* Welche Grösse? */
+    padding: 10px; /* Welche Grösse? */
+    height: 320px;
+}
+
+.flexdirection{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px; /* Welche Grösse? */
+}
+
+button{
+    cursor: pointer;
+    /* Design */
+}
+.center{
+    display: flex;
+}
+.meinBild{
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+@media (max-width: 765px) {
+    h1 {
+        font-size: 32px;
+    } 
+
+    p {
+        display: none;
+    }
+  }
+  @media (max-width: 555px) {
+    h1 {
+        font-size: 25px;
+    } 
+
+    .forgotResetContainer {
+        width: 380px;
+    }
+  }
+  @media (max-width: 445px) {
+    h1 {
+        font-size: 21px;
+    } 
+
+    .forgotResetContainer {
+        width: 321px;
+    }
+  }

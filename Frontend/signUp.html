@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join</title>
+
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/login.css" />
+    <link rel="stylesheet" href="./css/signUp.css" />
+
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="./img/logo_favicon.png"
+    />
+  </head>
+
+  <body onload="init()">
+    <div class="background">
+      <header class="signUpHeader">
+        <img class="logo" src="./img/logo.svg" alt="Logo" />
+      </header>
+      <div class="alignItems">
+        <div class="signUpContainer">
+          <div class="displayflex">
+            <img
+              onclick="window.location.href= './index.html';"
+              src="./img/zurück.png"
+              alt="back"
+              width="60px"
+              style="margin-left: -60px; cursor: pointer"
+            />
+            <h1>Sign up</h1>
+          </div>
+          <form class="flexdirection">
+            <div class="displayflex">
+              <input required type="names" id="names" placeholder="Name" />
+              <img
+                class="loginimg"
+                src="./img/name.png"
+                alt="name"
+                width="30px"
+              />
+            </div>
+            <div class="displayflex">
+              <input required type="email" id="email" placeholder="Email" />
+              <img
+                class="loginimg"
+                src="./img/mail.png"
+                alt="mail"
+                width="30px"
+              />
+            </div>
+            <div class="displayflex">
+              <input
+                required
+                type="password"
+                id="password"
+                placeholder="Password"
+              />
+              <img
+                class="loginimg"
+                src="./img/login.png"
+                alt="login"
+                width="30px"
+              />
+            </div>
+            <div class="displayflex">
+              <input
+                required
+                type="password"
+                id="passwordtwo"
+                placeholder="Confirm Password"
+              />
+              <img
+                class="loginimg"
+                src="./img/login.png"
+                alt="login"
+                width="30px"
+              />
+            </div>
+            <div class="footergap">
+              <div>
+                <input
+                  class="checkbox"
+                  type="checkbox"
+                  name="Remember"
+                  id="checkbox"
+                /><label for="remember">I accept the</label>
+                <a href="#">Privacy policy</a>
+              </div>
+            </div>
+            <div id="message"></div>
+            <div>
+              <button
+                id="anzeigenButton"
+                onclick="checkBox();"
+                class="signUpButton"
+              >
+                Sign up
+              </button>
+            </div>
+            <script>
+              document
+                .getElementById("anzeigenButton")
+                .addEventListener("click", function () {
+                  event.preventDefault();
+                  var emailInput = document.getElementById("email");
+                  if (
+                    emailInput.checkValidity() &
+                    checkbox.checked &
+                    (password == passwordtwo)
+                  ) {
+                    document.getElementById("meinBild").style.display = "block";
+                    setTimeout(function () {
+                      window.location.href = "./login.html";
+                    }, 1000);
+                  }
+                });
+            </script>
+          </form>
+        </div>
+        <div class="meinBild">
+          <img
+            id="meinBild"
+            src="./img/YouSigned.png"
+            alt="bild"
+            width="250px"
+            style="display: none"
+          />
+        </div>
+      </div>
+
+      <footer>
+        <a class="footerlink" href="privacyPolicy.html">Privacy Policy</a>
+        <a class="footerlink" href="legalNotice.html">Legal notice</a>
+      </footer>
+    </div>
+
+    <script src="./js/register.js"></script>
+    <script src="./js/storage.js"></script>
+    <script src="./js/script.js"></script>
+  </body>
+</html>
