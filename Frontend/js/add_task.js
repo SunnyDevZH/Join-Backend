@@ -13,14 +13,12 @@ let assignedContacts = [];
 let assignedContactColor = [];
 let assignedSubtasks = [];
 
-
 async function initAddTask() {
   getNewDate();
   await load();
   keypress();
   keypressAddTask();
 }
-
 
 /**  function to get all values from all inputfields and to push it in an JSON, and then in an array */
 async function addTask() {
@@ -32,33 +30,38 @@ async function addTask() {
     return;
   }
   allTasks.push(task);
-  await saveTask();
+  await saveTaskToServer(task);  // Save the task to the server
   clearAll();
   animation();
-  setTimeout(function () {
-    window.location.href = "./board.html";
-  }, 1000);
+  //setTimeout(function () {
+   // window.location.href = "./board.html";
+  //}, 1000);
 }
-
 
 /**this function gets all the values from inputfields and has the values for the TASK JSON */
 function getTask() {
-  let title = document.getElementById("title").value;
-  let description = document.getElementById("description").value;
-  let date = document.getElementById("calendar").value;
+  let title = document.getElementById("title").value.trim();
+  let description = document.getElementById("description").value.trim();
+  let date = document.getElementById("calendar").value.trim();
+
   let task = {
-    step: showColumn(),
-    title: title,
-    description: description,
-    assignedContact: assignedContacts,
-    contactColor: assignedContactColor,
-    date: date,
-    prio: assignedPrio,
-    category: assignedCategory,
-    categoryColor: assignedCategoryColor,
-    subtasks: assignedSubtasks,
+    step: showColumn(),  // Ensure this returns a valid string
+    title: title || "Untitled Task",  // Default title if empty
+    description: description || "No Description",
+    assignedContact: assignedContacts.map(contact => contact.trim()),  // Ensure it's a string array
+    contactColor: assignedContactColor,  // Ensure it's a string array
+    date: date || new Date().toISOString().split("T")[0],  // Fallback to today
+    prio: assignedPrio[0] || "MEDIUM",  // Only the priority string
+    category: assignedCategory || "Default",
+    categoryColor: assignedCategoryColor || "#000000",
+    subtasks: assignedSubtasks.map(subtask => ({
+      value: subtask.value.trim(),
+      status: subtask.status
+    }))
   };
-  return task
+  
+  console.log("Prepared task for submission:", JSON.stringify(task, null, 2));
+  return task;
 }
 
 
@@ -66,12 +69,10 @@ function getTask() {
 function showColumn() {
   if (typeof columns === 'undefined' || columns.length == 0) {
     return 'col-01';
-  }
-  else {
+  } else {
     return columns[0];
   }
 }
-
 
 /**this is the animation when a task is added to board */
 function animation() {
@@ -79,8 +80,7 @@ function animation() {
   document.getElementById("animationBox").classList.add("animation");
 }
 
-
-/** checks if the Prio was chosen, if not there is an alert.*/
+/** checks if the Prio was chosen, if not there is an alert. */
 function requirePrio() {
   let alertArea = document.getElementById("priorityAlert");
   alertArea.classList.add("d-none");
@@ -93,8 +93,7 @@ function requirePrio() {
   return true;
 }
 
-
-/** checks if the Category was chosen, if not there is an alert*/
+/** checks if the Category was chosen, if not there is an alert */
 function requireCategory() {
   let alertArea = document.getElementById("categoryAlert");
   alertArea.classList.add("d-none");
@@ -107,19 +106,34 @@ function requireCategory() {
   return true;
 }
 
+/** saves the tasks to the server */
+async function saveTaskToServer(task) {
+  try {
+    console.log('Sending task to server:', task);  // Log the task
+    const response = await fetch('http://127.0.0.1:8000/api/tasks/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(task),
+    });
 
-/** saves the tasks to the server*/
-async function saveTask() {
-  await setItem("allTasks", JSON.stringify(allTasks));
+    if (!response.ok) {
+      throw new Error('Failed to save task');
+    }
+
+    const data = await response.json();  // Response from server
+    console.log('Task saved successfully:', data);
+  } catch (error) {
+    console.error('Error saving task:', error);
+  }
 }
 
-
-/**this function saves only the categoryto the server for mathcing it with the board to only show used categories */
+/**this function saves only the category to the server for matching it with the board to only show used categories */
 async function saveCategory() {
   await setItem("taskCategories", JSON.stringify(taskCategories));
   await setItem("taskColors", JSON.stringify(taskColors));
 }
-
 
 /**this function loads all items from the server */
 async function load() {
@@ -133,13 +147,11 @@ async function load() {
   }
 }
 
-
-/** gets the date of today, so the user cannot chose previous dates*/
+/** gets the date of today, so the user cannot choose previous dates */
 function getNewDate() {
   let today = new Date().toISOString().split("T")[0];
   document.getElementById("calendar").setAttribute("min", today);
 }
-
 
 /** function to check which prio is clicked 
  * @param clickedTab displays the prio 
@@ -170,7 +182,6 @@ function addPrio(clickedTab) {
   assignedPrio.push(priority, image);
 }
 
-
 /** changes the color of the Prio tab and sets back the other prioButtons
  * @param clickedTab displays the prio 
  */
@@ -187,7 +198,6 @@ function checkPrio(clickedTab) {
   });
 }
 
-
 /**this function changes the image auf the Prio Image to a white one, when the button is clicked
  * @param clickedTab displays the prio
  */
@@ -196,7 +206,6 @@ function changeImage(clickedTab) {
   document.getElementById(clickedTab + "-img").src = imgPath;
 }
 
-
 /**this function sets the image back to the normal one, when another button is clicked */
 function resetImages() {
   document.getElementById("urgent-img").src = "./icons/priority_urgent.svg";
@@ -204,8 +213,7 @@ function resetImages() {
   document.getElementById("low-img").src = "./icons/priority_low.svg";
 }
 
-
-/** clears the PrioButtons and the Array*/
+/** clears the PrioButtons and the Array */
 function resetPrio() {
   assignedPrio = [];
   const tabs = ["urgent", "medium", "low"];
@@ -216,8 +224,7 @@ function resetPrio() {
   });
 }
 
-
-/** function to clear all inputfields*/
+/** function to clear all inputfields */
 function clearAll() {
   const title = document.getElementById("title");
   const description = document.getElementById("description");
