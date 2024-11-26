@@ -17,7 +17,6 @@ async function initAddTask() {
   getNewDate();
   loadContacts();
   loadCategoriesAndColors();
-  //await load();
   keypress();
   keypressAddTask();
 }
@@ -214,18 +213,6 @@ async function loadCategoriesAndColors() {
   } catch (error) {
     console.error("Fehler beim Laden der Kategorien und Farben:", error);
     // Hier kannst du eine Fehlernachricht anzeigen, wenn das Abrufen der Daten fehlschlägt
-  }
-}
-
-
-/**this function loads all items from the server */
-async function load() {
-  try {
-    taskCategories = JSON.parse(await getItem("taskCategories"));
-    taskColors = JSON.parse(await getItem("taskColors"));
-    
-  } catch (e) {
-    console.error("Loading error:", e);
   }
 }
 
