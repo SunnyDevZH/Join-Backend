@@ -15,6 +15,7 @@ let assignedSubtasks = [];
 
 async function initAddTask() {
   getNewDate();
+  loadContacts();
   //await load();
   keypress();
   keypressAddTask();
@@ -123,6 +124,34 @@ async function saveTaskToServer(task) {
   }
 }
 
+async function loadContacts() {
+  try {
+    // Anfrage an das Backend senden, um die Kontakte abzurufen
+    const response = await fetch('http://127.0.0.1:8000/api/contacts/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // Optional: Falls du eine Authentifizierung benötigst:
+        // 'Authorization': 'Bearer ' + 'dein-jwt-token-hier',
+      }
+    });
+
+    if (response.ok) {
+      // Kontakte erfolgreich abgerufen
+      const contacts = await response.json();  // Die Daten werden als JSON zurückgegeben
+      addContacts = contacts;  // Kontakte in deiner Anwendung speichern
+    
+    } else {
+      throw new Error('Fehler beim Abrufen der Kontakte');
+    }
+  } catch (error) {
+    console.error("Fehler beim Laden der Kontakte:", error);
+    // Hier kannst du eine Fehlernachricht anzeigen, wenn das Abrufen der Kontakte fehlschlägt
+  }
+ 
+  
+}
+
 /**this function saves only the category to the server for matching it with the board to only show used categories */
 async function saveCategory() {
   await setItem("taskCategories", JSON.stringify(taskCategories));
@@ -135,7 +164,6 @@ async function load() {
     taskCategories = JSON.parse(await getItem("taskCategories"));
     taskColors = JSON.parse(await getItem("taskColors"));
     allTasks = JSON.parse(await getItem("allTasks"));
-    addContacts = JSON.parse(await getItem("addContacts"));
   } catch (e) {
     console.error("Loading error:", e);
   }

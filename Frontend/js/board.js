@@ -63,6 +63,8 @@ async function loadTodos() {
     console.error("Failed to load todos:", error);
   }
 }
+
+
 /**
  * update all board elements
  * fill the columns with tasks
