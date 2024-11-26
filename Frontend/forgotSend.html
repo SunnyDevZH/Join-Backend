@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/login.css">
+    <link rel="stylesheet" href="./css/forgotSend.css">
+    <link rel="shortcut icon" type="image/x-icon" href="./img/logo_favicon.png"> 
+</head>
+<body>
+    <div class="background">
+        <header class="forgotSendHeader">
+            <img src="./img/logo.svg" alt="Logo">
+        </header>
+        <form class="alignItems">
+            <div class="forgotSendContainer">
+                <div class="center">
+                    <img onclick="window.location.href= './index.html';" src="./img/zurück.png" alt="back" width="60px" style="margin-left: -60px; cursor: pointer;">
+                    <h1 >I forgot my password</h1>
+                </div>
+                <div class="flexdirection">
+                    <p>Don't worry! We will send you an email with the </br>instructions to reset your Password.</p>
+                    <div class="displayflex">
+                        <input required type="email" id="emailInput" placeholder="Email">
+                        <img class="loginimg" src="./img/mail.png" alt="mail" width="25px"> 
+                    </div>
+                </div>
+                <div>
+                    <button id="anzeigenButton" class="signUpButton">Send me the email</button>
+                </div>
+                <script>
+                    document.getElementById('anzeigenButton').addEventListener('click', function() {
+                        event.preventDefault();
+                        var emailInput = document.getElementById('emailInput');
+                        if (emailInput.checkValidity()) {
+                            document.getElementById('meinBild').style.display = 'block';
+                            setTimeout(function() {
+                                window.location.href = './forgotReset.html';
+                            },1000);
+                        } 
+                    });
+                </script>
+            </div>
+        </form>
+        <div class="meinBild">
+            <img id="meinBild" src="./img/AnEmail.png" alt="bild" width="250px" style="display: none;">
+        </div>
+    </div>
+
+    <script src="./js/include.js"></script>
+    <script src="./js/storage.js"></script>
+    <script src="./js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+body {
+  padding: 0;
+  overflow: hidden;
+  /* Hide scrollbars */
+}
+
+.addButton {
+  background-color: rgb(42, 54, 71);
+  width: 300px;
+  height: 56px;
+  font-size: 21px;
+  color: white;
+  margin: 30px;
+}
+
+.addButton:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  background-color: #29abe2;
+}
+
+.createButton {
+  background-color: rgb(42, 54, 71);
+  width: 157px;
+  height: 49px;
+  font-size: 16px;
+  border-radius: 10px;
+  border-style: none;
+  color: white;
+}
+
+.createButton:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  background-color: #29abe2;
+}
+
+.maincontainer {
+  display: flex;
+}
+
+.containerTeam {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px;
+}
+
+.line {
+  margin: 10px;
+  width: 5px;
+  height: 60px;
+  background-color: rgb(41, 171, 226);
+}
+
+.line2 {
+  transform: rotate(90deg);
+  margin: 10px;
+  width: 3px;
+  height: 80px;
+  background-color: rgb(41, 171, 226);
+}
+
+.add {
+  background-color: rgba(251, 251, 251, 0.5);
+  z-index: 999;
+  /* Dieser Div liegt über allen anderen */
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.addcontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+  width: 1000px;
+  height: 350px;
+  border-radius: 30px;
+}
+
+.betterteam {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgb(42, 54, 71);
+  color: white;
+  height: 100%;
+  width: 100%;
+  border-radius: 30px;
+}
+
+.inputcointainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputsytle {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  gap: 20px;
+  padding-left: 60px;
+}
+
+.close {
+  display: flex;
+  justify-content: flex-end;
+  width: 80%;
+  cursor: pointer;
+}
+
+.buttonfield {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+input {
+  height: 30px;
+  width: 250px;
+  border-radius: 10px;
+  border: 1px solid grey;
+}
+
+.margin {
+  margin: 0;
+  width: 100%;
+}
+
+.scrolebar {
+  background-color: rgb(255, 255, 255);
+  height: 100vh;
+  overflow-y: scroll;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  /* Welchen Style? */
+}
+
+b {
+  cursor: pointer;
+}
+
+.displayflex {
+  margin-left: -70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.rendercontact {
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  gap: 30px;
+}
+
+.rendercontact:hover {
+  background-color: rgb(218, 218, 218);
+  cursor: pointer;
+}
+
+.rendercontact.selected {
+  background-color: rgb(218, 218, 218);
+}
+
+.rendercontact.sele .flex-direction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  gap: 20px;
+}
+
+.alphabet-group {
+  margin-top: 15px;
+  margin-left: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 5px;
+  font-weight: bold;
+}
+
+#mycontact {
+  width: 450px;
+  margin-bottom: 100px;
+}
+
+.contactBox {
+  display: flex;
+  flex-direction: column;
+  margin: 50px;
+  gap: 20px;
+}
+
+.contactBoxOne {
+  display: flex;
+  align-items: center;
+  margin: 50px;
+  gap: 20px;
+}
+
+.circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.initials {
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+}
+
+.edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.loginimg {
+  margin-left: -40px;
+}
+
+#name,
+#email,
+#phone {
+  padding-left: 10px;
+}
+
+button {
+  background-color: rgb(255, 255, 255);
+  width: 150px;
+  height: 49px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid black;
+  color: rgb(9, 9, 9);
+  cursor: pointer;
+}
+
+button:hover {
+  border: 2px solid #29abe2;
+  background-color: white;
+}
+
+#message1 {
+  margin-left: 60px;
+  padding: 20px;
+  color: red;
+  font-size: 10px;
+}
+
+@media (max-width: 1070px) {
+  .displaynone {
+    display: none;
+  }
+}
+
+@media (max-width: 930px) {
+  h1 {
+    font-size: 20px;
+  }
+
+  .displaynone1 {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  p {
+    display: none;
+  }
+
+  .addcontainer {
+    display: flex;
+    flex-direction: column;
+    height: 550px;
+  }
+}
+
+@media (max-width: 690px) {
+  .addcontainer {
+    gap: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  #mycontact {
+    margin-bottom: 180px;
+  }
+}
+
+@media (max-width: 500px) {
+  .addcontainer {
+    display: flex;
+    flex-direction: column;
+    height: 550px;
+  }
+}
+
+@media (max-width: 450px) {
+  .circle {
+    height: 50px;
+    width: 50px;
+  }
+
+  #mycontact {
+    width: 370px;
+  }
+
+  .addButton {
+    margin-left: 90px;
+  }
+}

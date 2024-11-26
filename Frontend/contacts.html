@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contacts</title>
+
+    <link rel="icon" type="image/x-icon" href="./img/logo_favicon.png" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/contact.css" />
+  </head>
+
+  <body onload="load()">
+    <div w3-include-html="./templates/navbar.html"></div>
+    <div w3-include-html="./templates/header.html"></div>
+
+    <div class="maincontainer">
+      <div class="scrolebar">
+        <div class="displayflex">
+          <button class="addButton" onclick="addContact()">
+            Add new contact +
+          </button>
+        </div>
+
+        <!-- my Contact-->
+        <div id="mycontact"></div>
+      </div>
+      <div class="displaynone">
+        <div id="" class="containerTeam">
+          <h1>Contacts</h1>
+          <div class="line"></div>
+          <p>Better with a team</p>
+        </div>
+        <!-- Add Contact-->
+        <div id="currentcontact"></div>
+        <!-- Das ist der Container, in dem das Kontaktformular gerendert wird -->
+      </div>
+      <div id="contactContainer"></div>
+      <div id="editContainer"></div>
+    </div>
+
+    <script src="./js/include.js"></script>
+    <script src="./js/storage.js"></script>
+    <script src="./js/script.js"></script>
+    <script src="./js/contacts.js"></script>
+  </body>
+</html>

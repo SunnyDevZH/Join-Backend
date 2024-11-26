@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="./img/logo_favicon.png" />
+    <title>Kanban Board</title>
+    <link rel="stylesheet" href="./css/board.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/add_task.css" />
+  </head>
+
+  <body onload="loadPage(); init();">
+    <div w3-include-html="./templates/navbar.html"></div>
+    <div w3-include-html="./templates/header.html"></div>
+
+    <div id="overlay-container" class="d-none">
+      <div class="overlay-card">
+        <div class="overlay-background" onclick="closeOverlay()"></div>
+        <div id="main-card" class="main-card">
+          <div class="detail-close">
+            <img
+              class="btn-close"
+              src="./icons/icon_cross.svg"
+              alt=""
+              onclick="closeOverlay()"
+            />
+          </div>
+          <div id="showDetailTask"></div>
+          <div id="showEditTask" class="d-none"></div>
+          <div
+            w3-include-html="./templates/add_task_template.html"
+            id="showNewTask"
+            class="d-none"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="container" class="container">
+      <div id="kanban-board">
+        <div class="board-header">
+          <h1>Board</h1>
+          <div class="board-header-right">
+            <div class="searchbar">
+              <input
+                id="board-search"
+                type="text"
+                placeholder="Find Task"
+                onkeyup="searchTasks()"
+              />
+              <img class="btn-search" src="./icons/icon_search.svg" alt="" />
+            </div>
+            <button onclick="newTaskColumn('col-01')" class="button btn-black">
+              <a>Add Task +</a>
+            </button>
+          </div>
+        </div>
+        <div class="board">
+          <div class="col col-01">
+            <div class="col-header">
+              <h3>To Do</h3>
+              <img
+                onclick="newTaskColumn('col-01')"
+                class="btn-add"
+                src="./icons/plus.svg"
+                alt="+"
+              />
+            </div>
+            <div
+              id="col-01"
+              class="todo-list"
+              ondrop="moveTo('col-01'); removeHighlight('col-01')"
+              ondragleave="removeHighlight('col-01')"
+              ondragover="allowDrop(event); highlight('col-01')"
+            >
+              <!-- <div>
+                <p>title</p>
+              </div> -->
+            </div>
+          </div>
+          <div class="col col-02">
+            <div class="col-header">
+              <h3>In Progress</h3>
+              <img
+                onclick="newTaskColumn('col-02')"
+                class="btn-add"
+                src="./icons/plus.svg"
+                alt="+"
+              />
+            </div>
+            <div
+              id="col-02"
+              class="todo-list"
+              ondrop="moveTo('col-02'); removeHighlight('col-02')"
+              ondragleave="removeHighlight('col-02')"
+              ondragover="allowDrop(event); highlight('col-02')"
+            >
+              <!-- todolist -->
+            </div>
+          </div>
+          <div class="col col-03">
+            <div class="col-header">
+              <h3>Await Feedback</h3>
+              <img
+                onclick="newTaskColumn('col-03')"
+                class="btn-add"
+                src="./icons/plus.svg"
+                alt="+"
+              />
+            </div>
+            <div
+              id="col-03"
+              class="todo-list"
+              ondrop="moveTo('col-03'); removeHighlight('col-03')"
+              ondragleave="removeHighlight('col-03')"
+              ondragover="allowDrop(event); highlight('col-03')"
+            >
+              <!-- todolist -->
+            </div>
+          </div>
+          <div class="col col-04">
+            <div class="col-header">
+              <h3>Done</h3>
+            </div>
+            <div
+              id="col-04"
+              class="todo-list"
+              ondrop="moveTo('col-04'); removeHighlight('col-04')"
+              ondragleave="removeHighlight('col-04')"
+              ondragover="allowDrop(event); highlight('col-04')"
+            >
+              <!-- todolist -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/storage.js"></script>
+    <script src="./js/include.js"></script>
+    <script src="./js/script.js"></script>
+    <script src="./js/board.js"></script>
+    <script src="./js/overlay_board.js"></script>
+    <script src="./js/html.js"></script>
+    <script src="./js/add_task.js"></script>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+body{
+    margin: 0;
+}
+.background{
+    background-color: rgb(246,247,248); /* Farbe von Mockup */
+    height: 100vh;
+    padding: 30px; /* Welche Grösse? */
+}
+
+.alignItems{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.forgotSendHeader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px; /* Welche Grösse? */
+    align-items: center;
+}
+
+.forgotSendContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgb(255,255,255);  /* Farbe von Mockup */
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; /* Welchen Style? */
+    border-radius: 30px;/* Welche Grösse? */
+    width: 540px;
+    height: 300px;
+    gap: 30px; /* Welche Grösse? */
+    padding: 30px; /* Welche Grösse? */
+}
+
+.flexdirection{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px; /* Welche Grösse? */
+}
+
+button{
+    cursor: pointer;
+    /* Design */
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+h1{
+    font-size: 45px;
+}
+
+.meinBild{
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+@media (max-width: 765px) {
+    h1 {
+        font-size: 32px;
+    } 
+    .forgotSendContainer{
+        width: 400px;
+    }
+    p {
+        display: none;
+    }
+  }
+  @media (max-width: 490px) {
+    h1 {
+        font-size: 20px;
+    } 
+
+    p {
+        display: none;
+    }
+    .forgotSendContainer {
+        height: 200px;
+    }
+    .forgotSendContainer{
+        width: 280px;
+    }
+  }
