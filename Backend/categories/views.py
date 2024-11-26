@@ -2,29 +2,31 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Category
+from .serializers import CategorySerializer
 
 @api_view(['GET', 'POST'])
 def categories(request):
     if request.method == 'GET':
-        # Kategorien abrufen
-        name = request.GET.get('name', None)
-        if name:
-            categories = Category.objects.filter(name=name)
-        else:
-            categories = Category.objects.all()
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
 
-        # Daten direkt als Liste von Diktaten zurückgeben
-        category_data = [{"id": cat.id, "name": cat.name, "color": cat.color} for cat in categories]
-        return Response(category_data, status=status.HTTP_200_OK)
+    if request.method == 'POST':
+        task_categories = request.data.get('taskCategories', [])
+        task_colors = request.data.get('taskColors', [])
 
-    elif request.method == 'POST':
-        # Neue Kategorie speichern
-        name = request.data.get('name')
-        color = request.data.get('color')
+        if len(task_categories) != len(task_colors):
+            return Response({"error": "The number of categories and colors must match."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not name or not color:
-            return Response({"error": "Name and color are required."}, status=status.HTTP_400_BAD_REQUEST)
+        # Versuche, die Kategorien zu erstellen
+        for category, color in zip(task_categories, task_colors):
+            # Überprüfen, ob der Name bereits in der Datenbank existiert
+            if Category.objects.filter(name=category).exists():
+                return Response({"error": f"The category name '{category}' already exists."}, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                Category.objects.create(name=category, color=color)
+            except Exception as e:
+                # Fehler abfangen und detaillierte Fehler zurückgeben
+                return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # Kategorie erstellen
-        category = Category.objects.create(name=name, color=color)
-        return Response({"id": category.id, "name": category.name, "color": category.color}, status=status.HTTP_201_CREATED)
+        return Response({"message": "Categories successfully created."}, status=status.HTTP_201_CREATED)

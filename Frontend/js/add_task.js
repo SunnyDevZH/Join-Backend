@@ -16,6 +16,7 @@ let assignedSubtasks = [];
 async function initAddTask() {
   getNewDate();
   loadContacts();
+  loadCategoriesAndColors();
   //await load();
   keypress();
   keypressAddTask();
@@ -104,7 +105,6 @@ function requireCategory() {
 /** saves the tasks to the server */
 async function saveTaskToServer(task) {
   try {
-    console.log('Sending task to server:', task);  // Log the task
     const response = await fetch('http://127.0.0.1:8000/api/tasks/', {
       method: 'POST',
       headers: {
@@ -152,18 +152,78 @@ async function loadContacts() {
   
 }
 
-/**this function saves only the category to the server for matching it with the board to only show used categories */
+/** This function saves the category to the server for matching it with the board to only show used categories */
 async function saveCategory() {
-  await setItem("taskCategories", JSON.stringify(taskCategories));
-  await setItem("taskColors", JSON.stringify(taskColors));
+  const url = "http://127.0.0.1:8000/api/categories/"; // Lokale Server-URL
+
+
+  const payload = {
+    taskCategories: taskCategories,
+    taskColors: taskColors
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Server error:", errorData);
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Successfully saved categories to server:", data);
+  } catch (error) {
+    console.error("Error saving categories to server:", error);
+  }
 }
+
+async function loadCategoriesAndColors() {
+  try {
+    // Anfrage an das Backend senden, um die Kategorien und Farben abzurufen
+    const response = await fetch('http://127.0.0.1:8000/api/categories/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // Optional: Falls du eine Authentifizierung benötigst:
+        // 'Authorization': 'Bearer ' + 'dein-jwt-token-hier',
+      }
+    });
+
+    if (response.ok) {
+      // Kategorien und Farben erfolgreich abgerufen
+      const categories = await response.json();  // Die Daten werden als JSON zurückgegeben
+
+      // taskCategories und taskColors Arrays füllen
+      taskCategories = categories.map(category => category.name);
+      taskColors = categories.map(category => category.color);
+
+      // Optional: Daten in der Anwendung speichern oder anzeigen
+      console.log("Kategorien:", taskCategories);
+      console.log("Farben:", taskColors);
+
+    } else {
+      throw new Error('Fehler beim Abrufen der Kategorien und Farben');
+    }
+  } catch (error) {
+    console.error("Fehler beim Laden der Kategorien und Farben:", error);
+    // Hier kannst du eine Fehlernachricht anzeigen, wenn das Abrufen der Daten fehlschlägt
+  }
+}
+
 
 /**this function loads all items from the server */
 async function load() {
   try {
     taskCategories = JSON.parse(await getItem("taskCategories"));
     taskColors = JSON.parse(await getItem("taskColors"));
-    allTasks = JSON.parse(await getItem("allTasks"));
+    
   } catch (e) {
     console.error("Loading error:", e);
   }
