@@ -24,7 +24,6 @@ function init() {
 
 async function loadTodos() {
   try {
-    // Anfrage an den Server
     const response = await fetch("http://127.0.0.1:8000/api/tasks/", {
       method: "GET",
       headers: {
@@ -32,21 +31,15 @@ async function loadTodos() {
       },
     });
 
-    // Überprüfen, ob die Anfrage erfolgreich war
     if (!response.ok) {
       throw new Error(`Server error: ${response.status} ${response.statusText}`);
     }
 
-    // JSON-Daten aus der Antwort extrahieren
     const newTodos = await response.json();
 
-    // Lokales Array aktualisieren
-    todos = newTodos.map((todo, index) => ({
-      ...todo,
-      id: index, // ID hinzufügen
-    }));
+    // Use the actual task IDs from the server, do not overwrite them
+    todos = newTodos;
 
-    // Bestehende Logik aufrufen
     updateHTML();
     pushCategories();
   } catch (error) {
@@ -63,20 +56,34 @@ function updateHTML() {
   let col = [];
 
   for (let i = 1; i <= 4; i++) {
-    col[i - 1] = todos.filter((t) => t["step"] == "col-0" + i);
-    document.getElementById("col-0" + i).innerHTML = "";
-    if (col[i - 1].length == 0) {
-      document.getElementById("col-0" + i).innerHTML = generateEmptyTodo();
+    const columnId = "col-0" + i;
+    const columnElement = document.getElementById(columnId);
+
+    // Filtere Aufgaben, die zur jeweiligen Spalte gehören
+    col[i - 1] = todos.filter((t) => t["step"] === columnId);
+
+    // Überprüfe, ob Duplikate existieren
+    const uniqueTasks = new Set(col[i - 1].map(task => task.id));
+    if (uniqueTasks.size !== col[i - 1].length) {
+      console.warn("Duplicate tasks detected in column:", columnId);
     }
-    col[i - 1].forEach((todo) => {
-      const element = todo;
-      document.getElementById("col-0" + i).innerHTML += generateTodo(
-        element,
-        i
-      );
-    });
+
+    let columnContent = ""; // Temporärer String für HTML-Inhalt
+    if (col[i - 1].length === 0) {
+      columnContent = generateEmptyTodo();
+    } else {
+      col[i - 1].forEach((todo) => {
+        columnContent += generateTodo(todo, i);
+      });
+    }
+
+    // Setze den HTML-Inhalt der Spalte
+    columnElement.innerHTML = columnContent;
   }
 }
+
+
+
 
 /**
  * generate todo elements
@@ -255,8 +262,9 @@ function generateEmptyTodo() {
  * @param id id of the dragged element
  */
 function startDragging(id) {
-  currentDraggedElement = id;
+  currentDraggedElement = id; // Speichern Sie die ID der Aufgabe
 }
+
 
 function allowDrop(ev) {
   ev.preventDefault();
@@ -266,22 +274,55 @@ function allowDrop(ev) {
  * change column and category for the dragged element
  * @param {*} category new category for the element
  */
-function moveTo(category) {
-  todos[currentDraggedElement]["step"] = category;
-  updateHTML();
-  saveBoard();
+async function moveTo(category) {
+  // Check if currentDraggedElement has a valid value
+  if (currentDraggedElement === undefined || currentDraggedElement === 0) {
+    console.error("Invalid task ID:", currentDraggedElement);
+    return;
+  }
+
+  // Find the task in the todos array by its ID
+  const todoIndex = todos.findIndex(todo => todo.id === currentDraggedElement);
+
+  if (todoIndex === -1) {
+    console.error("Task not found:", currentDraggedElement);
+    return;
+  }
+
+  // Update the task's step (category)
+  todos[todoIndex]["step"] = category;
+
+  // Prepare the API payload
+  const url = `http://127.0.0.1:8000/api/tasks/${todos[todoIndex].id}/`;
+  const payload = {
+    ...todos[todoIndex],  // All task data
+    step: category,  // New category (step)
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorDetails = await response.json();
+      console.error("Failed to update task:", todos[todoIndex].title, errorDetails);
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    // Refresh the board to reflect the changes
+    updateHTML();
+  } catch (error) {
+    console.error("Failed to update the task on the server:", error);
+  }
 }
 
-/**
- * change column and category for the dragged element
- * @param category new category for the element
- * @param element actual element
- */
-function mobileMoveTo(category, element) {
-  todos[element]["step"] = category;
-  updateHTML();
-  saveBoard();
-}
+
+
 
 /**
  * add or remove highlight while dragging
@@ -303,45 +344,42 @@ async function saveBoard() {
     const url = "http://127.0.0.1:8000/api/tasks/";
 
     for (const todo of todos) {
-      // Überprüfen, ob ein Datum vorhanden ist, andernfalls aktuelles Datum verwenden
-      const currentDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+      if (todo.id !== undefined) {  // Nur Aufgaben mit einer ID aktualisieren
+        const payload = {
+          title: todo.title,
+          description: todo.description,
+          category: todo.category,
+          category_color: todo.categoryColor,
+          step: todo.step,
+          prio: todo.prio,
+          subtasks: todo.subtasks,
+          assigned_contact: todo.assigned_contact,
+          contact_color: todo.contact_color,
+          date: todo.date,  // Datum bleibt unverändert
+        };
 
-      const payload = {
-        id: todo.id || null, // ID setzen, falls vorhanden
-        title: todo.title || "",
-        description: todo.description || "",
-        category: todo.category || "",
-        category_color: todo.categoryColor || "#000000", // Standardfarbe
-        step: todo.step || "col-01", // Standardspalte
-        prio: todo.prio || ["LOW", "./icons/priority_low.svg"], // Standardpriorität
-        subtasks: todo.subtasks || [], // Leere Liste als Fallback
-        assigned_contact: todo.assigned_contact || [],
-        contact_color: todo.contact_color || [],
-        date: todo.date || currentDate, // Standarddatum, falls leer
-      };
+        const response = await fetch(`${url}${todo.id}/`, {  // PUT auf spezifische Aufgabe
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const errorDetails = await response.json();
-        console.error("Failed to save task:", payload.title, errorDetails);
-        throw new Error(`Server error: ${response.status}`);
+        if (!response.ok) {
+          const errorDetails = await response.json();
+          console.error("Failed to save task:", payload.title, errorDetails);
+          throw new Error(`Server error: ${response.status}`);
+        }
       }
     }
     updateHTML();
-
-    console.log("All tasks successfully saved to the server.");
+    console.log("All tasks successfully updated on the server.");
   } catch (error) {
-    console.error("Failed to save the board to the server:", error);
+    console.error("Failed to update the board on the server:", error);
   }
-  updateHTML();
 }
+
 
 
 

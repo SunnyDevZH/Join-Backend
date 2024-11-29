@@ -174,27 +174,27 @@ function changeDetailCheckbox(index, i) {
  */
 async function deleteTask(taskId) {
     try {
-        const response = await fetch(`/api/tasks/${taskId}/`, {
-            method: 'DELETE',
-        });
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Error deleting task:", errorData);
-        } else {
-            console.log("Task deleted successfully");
-        }
+      const response = await fetch(`http://127.0.0.1:8000/api/tasks/${taskId}/`, {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        console.error("Failed to delete task:", taskId, errorDetails);
+        throw new Error(`Server error: ${response.status}`);
+      }
+      
+      // Erfolgreiches Löschen - Optional: Entferne die Aufgabe aus der UI
+      todos = todos.filter(todo => todo.id !== taskId);
+      updateHTML();
+      console.log("Task successfully deleted.");
     } catch (error) {
-        console.error("Unexpected error:", error);
+      console.error("Failed to delete the task:", error);
     }
-}
+  }
+  
 
-// Stelle sicher, dass taskId nicht 0 ist:
-const selectedTaskId = getSelectedTaskId(); // Beispiel-Methode
-if (selectedTaskId) {
-    deleteTask(selectedTaskId);
-} else {
-    console.error("No valid task ID selected.");
-}
+
 
 
 /** this function shows the values of the chosen task to be edited
