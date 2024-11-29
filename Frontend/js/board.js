@@ -349,14 +349,15 @@ async function saveBoard() {
           title: todo.title,
           description: todo.description,
           category: todo.category,
-          category_color: todo.categoryColor,
+          category_color: typeof todo.category_color === "string" ? todo.category_color : todo.category_color[0],
           step: todo.step,
           prio: todo.prio,
           subtasks: todo.subtasks,
           assigned_contact: todo.assigned_contact,
           contact_color: todo.contact_color,
-          date: todo.date,  // Datum bleibt unverändert
-        };
+          date: todo.date,
+      };
+      
 
         const response = await fetch(`${url}${todo.id}/`, {  // PUT auf spezifische Aufgabe
           method: "PUT",

@@ -27,21 +27,28 @@ async function pushCategories() {
 /**this function opens the overlay and shows the detailTask
  * @param index displays the number of the chosen task in the todos Array
  */
-function openOverlay(index) {
-    const task = todos[index];
-    document.body.scrollTop = document.documentElement.scrollTop = 0;
-    document.getElementById("overlay-container").classList.remove("d-none");
-    document.getElementById("showEditTask").classList.add("d-none");
-    document.getElementById("showNewTask").classList.add("d-none");
-    let detail = document.getElementById("showDetailTask");
-    detail.classList.remove("d-none");
-    pushSubtasks(index);
-    detail.innerHTML = "";
-    detail.innerHTML += renderDetailTask(task);
+function openOverlay(id) {
+    // Finde das todo mit der übergebenen ID
+    const task = todos.find(todo => todo.id === id);
     
-    // Speichern des Indexes im Overlay-Element
-    document.getElementById("overlay-container").dataset.index = index;
+    if (task) {
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        document.getElementById("overlay-container").classList.remove("d-none");
+        document.getElementById("showEditTask").classList.add("d-none");
+        document.getElementById("showNewTask").classList.add("d-none");
+        let detail = document.getElementById("showDetailTask");
+        detail.classList.remove("d-none");
+        pushSubtasks(id);  // Wenn nötig, den `id` für Subtasks verwenden
+        detail.innerHTML = "";
+        detail.innerHTML += renderDetailTask(task);
+
+        // Speichern der ID im Overlay-Element
+        document.getElementById("overlay-container").dataset.id = id;
+    } else {
+        console.log(`Todo mit ID ${id} nicht gefunden.`);
+    }
 }
+
 
 
 /**this function rebuilds the date which was saved after the mockup
@@ -100,11 +107,20 @@ function renderDetailContactList(contact, contactColor) {
 /**this functions pushes all the subtask of one task in the editedSubtasks array
  * @param index displays the index of the subtask in the array
  */
-function pushSubtasks(index) {
-    for (i = 0; i < todos[index]['subtasks'].length; i++) {
-        editedSubtasks.push(todos[index]["subtasks"][i])
-    };
+function pushSubtasks(id) {
+    // Finde das Todo anhand der ID
+    const task = todos.find(todo => todo.id === id);
+    
+    if (task && task.subtasks) {
+        // Wenn das Todo und Subtasks existieren, füge sie zum editedSubtasks Array hinzu
+        for (let i = 0; i < task.subtasks.length; i++) {
+            editedSubtasks.push(task.subtasks[i]);
+        }
+    } else {
+        console.log(`Todo mit ID ${id} oder Subtasks nicht gefunden.`);
+    }
 }
+
 
 
 /**this function generate the subtaskList of the chosen Task
@@ -200,8 +216,14 @@ async function deleteTask(taskId) {
 /** this function shows the values of the chosen task to be edited
  * @param i number of the task in the todos array
  */
-function editTask(i) {
-    const task = todos[i];
+function editTask(id) {
+    const task = todos.find(todo => todo.id === id);  // Suche das Task mit der entsprechenden ID
+
+    if (!task) {
+        console.error("Task mit ID", id, "nicht gefunden.");
+        return;  // Verlasse die Funktion, falls das Task nicht existiert
+    }
+
     document.getElementById("showDetailTask").classList.add("d-none");
     let editTask = document.getElementById("showEditTask");
     editTask.classList.remove("d-none");
@@ -209,6 +231,8 @@ function editTask(i) {
     getNewDate();
     showEditedTask(task);
 }
+
+
 
 
 /**gets all the values for the taskEdit
@@ -512,37 +536,76 @@ function changeCheckbox(i) {
 /**this function gets all the values for the editedTask
  * @param i displays the number of the task in the todos array
  */
-async function getEditedTask(i) {
-    let task = todos[i];
+async function getEditedTask(id) {
+    const task = todos.find(todo => todo.id === id);
+    
+
+    if (!task) {
+        console.error("Task mit ID", id, "nicht gefunden.");
+        return;
+    }
+
     let editedTitle = document.getElementById("title").value;
     let editedDescription = document.getElementById("description").value;
     let editedDate = document.getElementById("calendar").value;
-    let editedTask = {
-        step: task["step"],
+    let editedCategoryColor = task.categoryColor; // Hier den aktuellen Wert von categoryColor übernehmen
+
+    const editedTask = {
+        id: task.id,
+        step: task.step,
         title: editedTitle,
         description: editedDescription,
-        assignedContact: editedContacts,
-        contactColor: editedContactColor,
+        assigned_contact: task.assigned_contact,
+        contact_color: task.contact_color,
         date: editedDate,
-        prio: editedPrio,
-        category: task["category"],
-        categoryColor: task["categoryColor"],
-        subtasks: editedSubtasks,
+        prio: task.prio,
+        category: task.category,
+        category_color: task.category_color, // Hier sicherstellen, dass es ein String ist
+        subtasks: task.subtasks || [],
     };
+    
+    
+    
+    // Logge die Daten vor dem Senden
+    
     return editedTask;
 }
+
+
 
 
 /**this function overwrites and saves the editedTask in the todos array
  * @param i displays the number of the edited task in the todos Array
  */
 async function addEditTask(i) {
-    let editedTask = await getEditedTask(i);
-    todos[i] = editedTask;
+    // Wenn `i` ein Index ist, hole die ID
+    const id = todos[i]?.id || i;
+
+    // Hol die bearbeitete Aufgabe
+    let editedTask = await getEditedTask(id);
+    console.log(editedTask)
+
+    if (!editedTask) {
+        console.error("Bearbeitete Aufgabe konnte nicht erstellt werden.");
+        return;
+    }
+
+    // Aktualisiere die entsprechende Aufgabe im `todos`-Array
+    let index = todos.findIndex(todo => todo.id === editedTask.id);
+    if (index !== -1) {
+        todos[index] = editedTask;
+    } else {
+        console.error(`Aufgabe mit ID ${editedTask.id} nicht im Array gefunden.`);
+    }
+
+    // Speichere die Änderungen
     await saveBoard();
+
+    // Aktualisiere die Anzeige
     init();
     closeOverlay();
 }
+
 
 
 /**closes the overlay and sets the body back to overflow auto */
