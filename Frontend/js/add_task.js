@@ -41,7 +41,6 @@ async function addTask() {
 
 /**this function gets all the values from inputfields and has the values for the TASK JSON */
 function getTask() {
-  debugger;
   let title = document.getElementById("title").value;
   let description = document.getElementById("description").value;
   let date = document.getElementById("calendar").value;
@@ -151,17 +150,62 @@ async function loadContacts() {
   
 }
 
-/** This function saves the category to the server for matching it with the board to only show used categories */
+/**
+ * This function saves the category to the server for matching it with the board to only show used categories.
+ */
 async function saveCategory() {
   const url = "http://127.0.0.1:8000/api/categories/"; // Lokale Server-URL
 
-
-  const payload = {
-    taskCategories: taskCategories,
-    taskColors: taskColors
+  // Standardfarbe definieren
+  const generateRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   };
 
   try {
+    // Bestehende Kategorien vom Server abrufen
+    const existingCategoriesResponse = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    });
+
+    if (!existingCategoriesResponse.ok) {
+      throw new Error("Failed to fetch existing categories");
+    }
+
+    const existingCategories = await existingCategoriesResponse.json();
+    const existingCategoryNames = existingCategories.map(category => category.name);
+
+    // Filtern: Nur neue Kategorien hinzufügen
+    const filteredCategories = [];
+    const filteredColors = [];
+
+    taskCategories.forEach((category, index) => {
+      if (!existingCategoryNames.includes(category)) {
+        filteredCategories.push(category);
+        filteredColors.push(taskColors[index] || generateRandomColor()); // Fehlende Farben auffüllen
+      }
+    });
+
+    // Wenn es keine neuen Kategorien gibt, beende die Funktion
+    if (filteredCategories.length === 0) {
+      console.log("No new categories to save.");
+      return;
+    }
+
+    // Daten für den POST-Request vorbereiten
+    const payload = {
+      taskCategories: filteredCategories,
+      taskColors: filteredColors,
+    };
+
+    // Neue Kategorien an den Server senden
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -178,6 +222,7 @@ async function saveCategory() {
 
     const data = await response.json();
     console.log("Successfully saved categories to server:", data);
+
   } catch (error) {
     console.error("Error saving categories to server:", error);
   }
@@ -202,10 +247,6 @@ async function loadCategoriesAndColors() {
       // taskCategories und taskColors Arrays füllen
       taskCategories = categories.map(category => category.name);
       taskColors = categories.map(category => category.color);
-
-      // Optional: Daten in der Anwendung speichern oder anzeigen
-      console.log("Kategorien:", taskCategories);
-      console.log("Farben:", taskColors);
 
     } else {
       throw new Error('Fehler beim Abrufen der Kategorien und Farben');

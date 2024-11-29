@@ -64,17 +64,8 @@ function updateNavbar() {
 
 /**
  * save todos from server to local array
- *
-
-async function loadTodos() {
-  let newTodos = await getItem("allTasks");
-  sumTodos = JSON.parse(newTodos);
-  for (let i = 0; i < sumTodos.length; i++) {
-    sumTodos[i].id = i;
-  }
-}
-  */
-
+ */
+  
 async function loadTodos() {
   try {
     // Anfrage an den Server

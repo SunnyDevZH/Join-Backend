@@ -20,7 +20,7 @@ async function pushCategories() {
         }
     }
     await saveCategory();
-    await loadCategory();
+    await loadCategoriesAndColors();
 }
 
 
@@ -38,6 +38,9 @@ function openOverlay(index) {
     pushSubtasks(index);
     detail.innerHTML = "";
     detail.innerHTML += renderDetailTask(task);
+    
+    // Speichern des Indexes im Overlay-Element
+    document.getElementById("overlay-container").dataset.index = index;
 }
 
 
@@ -165,18 +168,32 @@ function changeDetailCheckbox(index, i) {
 }
 
 
-/**this function deletes the whole task from the board
- * @param taskId number of the task in the totods array
+/**
+ * This function deletes a task from the board and the server
+ * @param taskId number of the task in the todos array
  */
 async function deleteTask(taskId) {
-    const index = todos.findIndex((task) => task["id"] === taskId);
-    if (index !== -1) {
-        todos.splice(index, 1);
+    try {
+        const response = await fetch(`/api/tasks/${taskId}/`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error deleting task:", errorData);
+        } else {
+            console.log("Task deleted successfully");
+        }
+    } catch (error) {
+        console.error("Unexpected error:", error);
     }
-    document.getElementById("overlay-container").classList.add("d-none");
-    document.body.style.overflow = 'auto';
-    await saveBoard();
-    init();
+}
+
+// Stelle sicher, dass taskId nicht 0 ist:
+const selectedTaskId = getSelectedTaskId(); // Beispiel-Methode
+if (selectedTaskId) {
+    deleteTask(selectedTaskId);
+} else {
+    console.error("No valid task ID selected.");
 }
 
 
@@ -352,15 +369,38 @@ function checkEditedPrio(clickedTab) {
 
 
 /**this function loads only the category from the server */
-async function loadCategory() {
+async function loadCategoriesAndColors() {
     try {
-        taskCategories = JSON.parse(await getItem("taskCategories"));
-        taskColors = JSON.parse(await getItem("taskColors"));
-    } catch (e) {
-        console.error("Loading error:", e);
+      // Anfrage an das Backend senden, um die Kategorien und Farben abzurufen
+      const response = await fetch('http://127.0.0.1:8000/api/categories/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          // Optional: Falls du eine Authentifizierung benötigst:
+          // 'Authorization': 'Bearer ' + 'dein-jwt-token-hier',
+        }
+      });
+  
+      if (response.ok) {
+        // Kategorien und Farben erfolgreich abgerufen
+        const categories = await response.json();  // Die Daten werden als JSON zurückgegeben
+  
+        // taskCategories und taskColors Arrays füllen
+        taskCategories = categories.map(category => category.name);
+        taskColors = categories.map(category => category.color);
+  
+        // Optional: Daten in der Anwendung speichern oder anzeigen
+        console.log("Kategorien:", taskCategories);
+        console.log("Farben:", taskColors);
+  
+      } else {
+        throw new Error('Fehler beim Abrufen der Kategorien und Farben');
+      }
+    } catch (error) {
+      console.error("Fehler beim Laden der Kategorien und Farben:", error);
+      // Hier kannst du eine Fehlernachricht anzeigen, wenn das Abrufen der Daten fehlschlägt
     }
-}
-
+  }
 
 /**shows all the subtasks from the editedSubtasks array of the task*/
 function showEditedSubtasks() {

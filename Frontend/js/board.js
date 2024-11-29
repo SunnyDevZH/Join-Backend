@@ -20,17 +20,7 @@ function init() {
 
 /**
  * preload all todos for the board
- *
-async function loadTodos() {
-  let newTodos = await getItem("allTasks");
-  todos = JSON.parse(newTodos);
-  for (let i = 0; i < todos.length; i++) {
-    todos[i].id = i;
-  }
-  updateHTML();
-  pushCategories();
-}
-  */
+ */
 
 async function loadTodos() {
   try {
@@ -306,11 +296,54 @@ function removeHighlight(id) {
 }
 
 /**
- * save actual data to the server
+ * Save the current board data to the server
  */
 async function saveBoard() {
-  await setItem("allTasks", JSON.stringify(todos));
+  try {
+    const url = "http://127.0.0.1:8000/api/tasks/";
+
+    for (const todo of todos) {
+      // Überprüfen, ob ein Datum vorhanden ist, andernfalls aktuelles Datum verwenden
+      const currentDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+
+      const payload = {
+        id: todo.id || null, // ID setzen, falls vorhanden
+        title: todo.title || "",
+        description: todo.description || "",
+        category: todo.category || "",
+        category_color: todo.categoryColor || "#000000", // Standardfarbe
+        step: todo.step || "col-01", // Standardspalte
+        prio: todo.prio || ["LOW", "./icons/priority_low.svg"], // Standardpriorität
+        subtasks: todo.subtasks || [], // Leere Liste als Fallback
+        assigned_contact: todo.assigned_contact || [],
+        contact_color: todo.contact_color || [],
+        date: todo.date || currentDate, // Standarddatum, falls leer
+      };
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        console.error("Failed to save task:", payload.title, errorDetails);
+        throw new Error(`Server error: ${response.status}`);
+      }
+    }
+    updateHTML();
+
+    console.log("All tasks successfully saved to the server.");
+  } catch (error) {
+    console.error("Failed to save the board to the server:", error);
+  }
+  updateHTML();
 }
+
+
 
 // make the first character of a string (element) uppercase
 function firstCharToUpperCase(element) {
