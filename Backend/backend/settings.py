@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'contact',
     'tasks',
     'categories',
+    'accounts',
 ]
 
 MIDDLEWARE = [

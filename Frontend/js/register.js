@@ -33,12 +33,32 @@ async function register() {
     color: generateRandomColor(),
   };
 
-  users.push(contact);
+  try {
+    const response = await fetch('http://127.0.0.1:8000/auth/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Gib an, dass du JSON sendest
+      },
+      body: JSON.stringify(contact), // Deine Formulardaten
+    });
 
-  await setItem("users", JSON.stringify(users)); // Daten von Users auf Server laden
-  resetForm();
-  window.location.href = "./index.html";
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Erfolgreich registriert:", data);
+      // Weiterleitung oder andere Aktionen
+      //window.location.href = "./index.html";  // Weiterleitung nach erfolgreicher Registrierung
+    } else {
+      console.log("Fehler bei der Registrierung:", data.message);
+      alert(data.message);  // Zeige die Fehlermeldung an
+    }
+  } catch (error) {
+    console.error("Fehler:", error);
+    alert("Ein Fehler ist aufgetreten.");
+  }
 }
+
+
 
 /** Reset Form*/
 function resetForm() {
