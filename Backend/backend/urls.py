@@ -4,7 +4,6 @@ from django.contrib.auth import views as auth_views  # Django's built-in auth vi
 from tasks import views as task_views
 from contact import views as contact_views
 from categories import views as category_views
-from auth_system import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -20,8 +19,5 @@ urlpatterns = [
     # Categories Endpoints
     path('api/categories/', category_views.categories, name='categories'),
 
-
-    # Built-in Django Auth Views
-     path('auth/register_or_login/', auth_views.register_or_login, name='register_or_login'),
 
     ]

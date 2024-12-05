@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'contact',
     'tasks',
     'categories',
-    'auth_system',
     
 ]
 
