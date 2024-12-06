@@ -48,7 +48,7 @@ async function register() {
 
     if (response.ok) {
         console.log("Erfolgreich registriert:", data);
-        // Weiterleitung oder andere Aktionen
+        window.location.href = "./login.html";
     } else {
         console.log("Fehler bei der Registrierung:", data);
         alert(data.error || data.message || "Ein unbekannter Fehler ist aufgetreten.");
