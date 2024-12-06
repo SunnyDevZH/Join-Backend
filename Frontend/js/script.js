@@ -37,7 +37,7 @@ function indexStart() {
  */
 
 async function loadPage() {
-  //await loadUsers();
+  await loadUsers();
   await loadTodos();
   updateHeader();
   changeAvatarColor();
@@ -98,33 +98,64 @@ async function loadTodos() {
 
 /**
  * load users from server to local array
- *
-
-(async function loadUsers() {
-  let getUsers = await getItem("users");
-  users = JSON.parse(getUsers);
-  getUserData();
-})();
-
-/**
- * get user data from the server
- * setup guest user if needed
  */
 
-function getUserData() {
-  if (userIndex == -1 || userIndex == null) {
-    userName = "Guest";
-    userColor = "#29abe2";
+async function loadUsers() {
+  // Token aus dem localStorage holen
+  const token = localStorage.getItem("access_token");
+
+  // Wenn kein Token vorhanden ist, den Gastbenutzernamen verwenden
+  if (!token) {
+    console.log("Kein Token gefunden, der Benutzer ist nicht eingeloggt.");
+    getUserData(); // Setze Gastdaten
   } else {
-    if (users[userIndex].hasOwnProperty("names")) {
-      userName = users[userIndex].names;
+    // Wenn ein Token vorhanden ist, Benutzerdaten vom Server abfragen
+    try {
+      const response = await fetch("http://127.0.0.1:8000/register_or_login/", {
+        method: "POST", // Wir senden eine POST-Anfrage, um die Benutzerdaten zu erhalten
+        headers: {
+          "Authorization": `Bearer ${token}`, // Token im Header übergeben
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          // Hier wird keine E-Mail und kein Passwort gesendet, sondern das Token wird verwendet
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Benutzerdaten vom Server:", data);
+
+        // Benutzername setzen, falls vorhanden
+        userName = data.username || "Mr Nobody"; // Falls kein Username, setze "Mr Nobody"
+      } else {
+        console.error("Fehler beim Abrufen der Benutzerdaten vom Server:", await response.json());
+        getUserData(); // Standarddaten für den Gastbenutzer setzen
+      }
+    } catch (error) {
+      console.error("Fehler:", error);
+      getUserData(); // Fehlerfall: Nutze lokale Daten (Guest)
+    }
+  }
+}
+
+/**
+ * Standardwerte für den Gastbenutzer setzen, falls der Benutzer nicht eingeloggt ist
+ */
+function getUserData() {
+  const userIndex = localStorage.getItem("activeID");
+
+  if (userIndex == -1 || userIndex == null) {
+    // Standardwert für Gäste
+    userName = "Guest";
+  } else {
+    // Wenn der Benutzer im localStorage existiert, nutze den gespeicherten Namen
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if (users[userIndex]) {
+      userName = users[userIndex].username || "Mr Nobody"; // Falls kein Username, setze "Mr Nobody"
     } else {
       userName = "Mr Nobody";
-    }
-    if (users[userIndex].hasOwnProperty("color")) {
-      userColor = users[userIndex].color;
-    } else {
-      userColor = "#22ab5b";
     }
   }
 }
