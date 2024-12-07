@@ -78,7 +78,7 @@ function generateRandomColor() {
   return colorCode;
 }
 
-/** Load User*/
+/** Load User*
 async function loadUsers() {
   try {
     users = JSON.parse(await getItem("users"));
@@ -86,7 +86,7 @@ async function loadUsers() {
     console.error("Loading error:", e); // Falls Users nicht gefunden
     alert("User nicht gefunden");
   }
-}
+} */
 
 /** Checkbox*/
 function checkBox() {

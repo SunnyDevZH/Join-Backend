@@ -99,45 +99,58 @@ async function loadTodos() {
 /**
  * load users from server to local array
  */
-
 async function loadUsers() {
   // Token aus dem localStorage holen
   const token = localStorage.getItem("access_token");
+  users = []; // Benutzerinformationen hier speichern
 
   // Wenn kein Token vorhanden ist, den Gastbenutzernamen verwenden
   if (!token) {
     console.log("Kein Token gefunden, der Benutzer ist nicht eingeloggt.");
     getUserData(); // Setze Gastdaten
-  } else {
-    // Wenn ein Token vorhanden ist, Benutzerdaten vom Server abfragen
-    try {
-      const response = await fetch("http://127.0.0.1:8000/register_or_login/", {
-        method: "POST", // Wir senden eine POST-Anfrage, um die Benutzerdaten zu erhalten
-        headers: {
-          "Authorization": `Bearer ${token}`, // Token im Header übergeben
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          // Hier wird keine E-Mail und kein Passwort gesendet, sondern das Token wird verwendet
-        }),
+    userName = "Gast"; // Gastbenutzername setzen
+    return;
+  }
+
+  try {
+    // Benutzerdaten mit einer GET-Anfrage abrufen
+    const response = await fetch("http://127.0.0.1:8000/register_or_login/", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`, // Token im Header übergeben
+      },
+    });
+
+    if (!response.ok) {
+      // Fehler beim Abrufen der Daten behandeln
+      const errorData = await response.json();
+      console.error("Fehler beim Abrufen der Benutzerdaten:", errorData);
+      getUserData(); // Setze Gastdaten bei Fehler
+      userName = "Gast"; // Standardwert für Benutzername
+    } else {
+      const data = await response.json();
+      console.log("Benutzerdaten vom Server:", data);
+
+      // Globale Benutzername-Variable setzen
+      userName = data.username || "Mr Nobody"; // Falls kein Username, setze "Mr Nobody"
+
+      // Daten in die users-Variable speichern
+      users.push({
+        username: userName,
+        email: data.email || "Keine E-Mail verfügbar",
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Benutzerdaten vom Server:", data);
-
-        // Benutzername setzen, falls vorhanden
-        userName = data.username || "Mr Nobody"; // Falls kein Username, setze "Mr Nobody"
-      } else {
-        console.error("Fehler beim Abrufen der Benutzerdaten vom Server:", await response.json());
-        getUserData(); // Standarddaten für den Gastbenutzer setzen
-      }
-    } catch (error) {
-      console.error("Fehler:", error);
-      getUserData(); // Fehlerfall: Nutze lokale Daten (Guest)
+      console.log("Aktueller Benutzername:", userName);
+      console.log("Benutzerliste:", users);
     }
+  } catch (error) {
+    console.error("Netzwerk- oder Serverfehler:", error);
+    getUserData(); // Fehlerfall: Nutze lokale Daten (Guest)
+    userName = "Gast"; // Standardwert für Benutzername
   }
 }
+
+
 
 /**
  * Standardwerte für den Gastbenutzer setzen, falls der Benutzer nicht eingeloggt ist
