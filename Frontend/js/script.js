@@ -129,7 +129,7 @@ async function loadUsers() {
       userName = "Gast"; // Standardwert für Benutzername
     } else {
       const data = await response.json();
-      console.log("Benutzerdaten vom Server:", data);
+      
 
       // Globale Benutzername-Variable setzen
       userName = data.username || "Mr Nobody"; // Falls kein Username, setze "Mr Nobody"
@@ -140,8 +140,6 @@ async function loadUsers() {
         email: data.email || "Keine E-Mail verfügbar",
       });
 
-      console.log("Aktueller Benutzername:", userName);
-      console.log("Benutzerliste:", users);
     }
   } catch (error) {
     console.error("Netzwerk- oder Serverfehler:", error);
