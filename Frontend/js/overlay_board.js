@@ -30,7 +30,7 @@ async function pushCategories() {
 function openOverlay(id) {
     // Finde das todo mit der übergebenen ID
     const task = todos.find(todo => todo.id === id);
-    console.log(task)
+    
     
     if (task) {
         document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -237,13 +237,17 @@ function editTask(id) {
 /**gets all the values for the taskEdit
  * @param task displays the chosen task
  */
-function showEditedTask(task) {
+async function showEditedTask(task) {
+    
+    
     document.getElementById("title").value = task["title"];
     document.getElementById("description").value = task["description"];
     document.getElementById("calendar").value = task["date"];
+    console.log(task);
     displayContacts(task);
     displayPrio(task);
     showEditedSubtasks(task);
+    
 }
 
 
@@ -281,6 +285,7 @@ function showContactList() {
  * @param task displays the chosen task
  */
 function pushContacts(task) {
+    
     for (i = 0; i < task["assigned_contact"].length; i++) {
         editedContacts.push(task["assigned_contact"][i]);
         editedContactColor.push(task["contact_color"][i]);
@@ -537,6 +542,9 @@ function changeCheckbox(i) {
  */
 async function getEditedTask(id) {
     const task = todos.find(todo => todo.id === id);
+
+    console.log(task);
+    
     
     if (!task) {
         console.error("Task mit ID", id, "nicht gefunden.");
@@ -548,8 +556,8 @@ async function getEditedTask(id) {
     let editedDate = document.getElementById("calendar").value;
 
     // Führe hier die Prüfung durch, um sicherzustellen, dass die bearbeiteten Daten vorhanden sind
-    let editedAssignedContact = editedContacts.length > 0 ? editedContacts : task.assigned_contact; // Falls keine bearbeiteten Kontakte, behalte die alten
-    let editedContactColor = editedContactColor.length > 0 ? editedContactColor : task.contact_color;
+    let editedAssignedContact = document.getElementById("calendar").value; // Falls keine bearbeiteten Kontakte, behalte die alten
+    let editedContactColor = document.getElementById("calendar").value;
 
     let editedPrio = task.prio; // Zuerst den Originalwert der Priorität verwenden, falls keine Bearbeitung erfolgte
     if (editedPrio.length === 0) {
