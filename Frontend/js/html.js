@@ -1,7 +1,7 @@
 
 function renderDetailTask(task) {
   return `
-    <div class="todo-category width" style="background-color:${task["categoryColor"]
+    <div class="todo-category width" style="background-color:${task["category_color"]
     }">
     ${task["category"]}
     </div>

@@ -103,7 +103,7 @@ function generateTodo(element, col) {
   <div onclick="openOverlay(${element["id"]})">
     <div  class="todo-category-container">
       <div class="todo-category" style="background-color:${
-        element["categoryColor"]
+        element["category_color"]
       }">${element["category"]}
       </div>  
     </div> 
