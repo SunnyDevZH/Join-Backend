@@ -555,23 +555,14 @@ async function getEditedTask(id) {
     let editedDescription = document.getElementById("description").value;
     let editedDate = document.getElementById("calendar").value;
 
-    // Führe hier die Prüfung durch, um sicherzustellen, dass die bearbeiteten Daten vorhanden sind
-    let editedAssignedContact = document.getElementById("calendar").value; // Falls keine bearbeiteten Kontakte, behalte die alten
-    let editedContactColor = document.getElementById("calendar").value;
-
-    let editedPrio = task.prio; // Zuerst den Originalwert der Priorität verwenden, falls keine Bearbeitung erfolgte
-    if (editedPrio.length === 0) {
-        // Hier könntest du eine Standard-Priorität festlegen, falls nichts ausgewählt wurde
-        editedPrio = ['LOW'];
-    }
 
     const editedTask = {
         id: task.id,
         step: task.step,
         title: editedTitle,
         description: editedDescription,
-        assigned_contact: editedAssignedContact,
-        contact_color: editedContactColor,
+        assigned_contact: editedContacts, // Hier verwenden wir die bearbeiteten Kontakte
+        contact_color: editedContactColor, // Hier verwenden wir die bearbeiteten Kontaktfarben
         date: editedDate,
         prio: editedPrio,
         category: task.category,
