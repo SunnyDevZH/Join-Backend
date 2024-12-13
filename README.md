@@ -21,9 +21,9 @@ Bevor du das Projekt klonst, stelle sicher, dass du die folgenden Softwarekompon
 
 ## Installation
 
-python3 -m venv env
-source env/bin/activate
-source env/bin/activate
+1.  python3 -m venv env
+2.  source env/bin/activate
+3.  python3 manage.py runserver
 
 
 ### 1. Repository klonen
