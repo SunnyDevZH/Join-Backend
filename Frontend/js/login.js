@@ -58,3 +58,33 @@ async function loadUsers() {
     alert("User nicht gefunden");
   }
 } */
+
+/* Guest-Login*/
+async function guestLogin() {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/guest_token/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Gäste-Token erfolgreich erstellt:", data);
+
+      // Token speichern
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+
+      // Weiterleitung zur geschützten Seite
+      window.location.href = "./summary.html";
+    } else {
+      const errorData = await response.json();
+      alert(errorData.error || "Fehler beim Erstellen des Gäste-Tokens.");
+    }
+  } catch (error) {
+    console.error("Fehler beim Gäste-Login:", error);
+    alert("Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
+  }
+}

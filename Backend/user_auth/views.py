@@ -61,3 +61,19 @@ def register_or_login(request):
             return Response({"error": "Authentifizierung erforderlich."}, status=status.HTTP_401_UNAUTHORIZED)
 
     return Response({"error": "Nur POST und GET-Anfragen erlaubt."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['POST'])
+def guest_token(request):
+    # Erstelle einen Dummy-Benutzer für den Gastzugang
+    guest_user, created = User.objects.get_or_create(username='guest_user')
+
+    if not guest_user:
+        return Response({"error": "Gastbenutzer konnte nicht erstellt werden."}, status=500)
+
+    # Generiere JWT-Token
+    refresh = RefreshToken.for_user(guest_user)
+
+    return Response({
+        'access_token': str(refresh.access_token),
+        'refresh_token': str(refresh),
+    })

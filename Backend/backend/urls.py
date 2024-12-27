@@ -30,4 +30,7 @@ urlpatterns = [
     # Token Endpoints
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    # Guets login 
+    path('guest_token/', auth_views.guest_token, name='guest_token'),
 ]
