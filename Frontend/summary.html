@@ -82,6 +82,16 @@
       </div>
     </div>
   </body>
+  <script>
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+            alert('Du bist nicht eingeloggt. Bitte logge dich ein.');
+            window.location.href = '/Frontend/login.html';
+        }
+    });
+</script>
 
   <script src="./js/include.js"></script>
   <script src="./js/storage.js"></script>

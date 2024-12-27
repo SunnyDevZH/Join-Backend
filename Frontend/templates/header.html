@@ -1,27 +1,38 @@
 <link rel="stylesheet" href="./css/board.css" />
 <link rel="stylesheet" href="./css/header.css" />
 
-<div class="header">
-  <div class="header-left">
-    <div class="header-title">Kanban Project Managemant Tool</div>
-    <img class="header-logo" src="./img/logo.svg" alt="" />
-  </div>
+<body>
+  <div class="header">
+    <div class="header-left">
+      <div class="header-title">Kanban Project Management Tool</div>
+      <img class="header-logo" src="./img/logo.svg" alt="" />
+    </div>
 
-  <div class="header-user-info">
-    <a class="btn-header-info" href="./join_info.html">
-      <img src="./icons/help_default.svg" alt="" />
-    </a>
-    <div class="header-avatar" style="background-color: #fcba03">
-      <div id="avatar-menu" class="d-none">
-        <a href="./legalNotice.html">Legal Notice</a>
-        <a href="./privacyPolicy.html">Privacy Policy</a>
-        <a href="./index.html">Logout</a>
+    <div class="header-user-info">
+      <a class="btn-header-info" href="./join_info.html">
+        <img src="./icons/help_default.svg" alt="Help" />
+      </a>
+      <div class="header-avatar" style="background-color: #fcba03">
+        <div id="avatar-menu" class="d-none">
+          <a href="./legalNotice.html">Legal Notice</a>
+          <a href="./privacyPolicy.html">Privacy Policy</a>
+          <a href="./index.html" id="logout-link">Logout</a>
+        </div>
+        <div id="avatar-initials" onclick="toggleAvatarMenu()">__</div>
       </div>
-      <div id="avatar-initials" onclick="toggleAvatarMenu()">__</div>
     </div>
   </div>
-</div>
 
-<script>
-  document.addEventListener("click", closeAvatarMenuOutside);
-</script>
+  <!-- Dein Skript hier -->
+  <script src="./js/script.js">
+
+
+  </script>
+</body>
+
+  <!-- JS Code -->
+
+  <script>
+    document.addEventListener('click', closeAvatarMenuOutside);
+  </script>
+

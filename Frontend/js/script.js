@@ -5,6 +5,47 @@ let userName = "";
 let userColor = "";
 let userIndex = localStorage.getItem("activeID");
 
+/* 
+Websiten Schutz
+*/
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const logoutLink = document.getElementById('logout-link');
+    if (logoutLink) {
+      console.log('Logout-Link gefunden. Event-Listener wird hinzugefügt.');
+      logoutLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Logout-Link wurde geklickt!');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        window.location.href = './login.html';
+      });
+    } else {
+      console.log('Fehler: Logout-Link konnte nicht gefunden werden!');
+    }
+  }, 500); // Verzögerung von 500ms
+});
+
+
+// Avatar-Menü schließen, wenn außerhalb geklickt wird
+function closeAvatarMenuOutside(event) {
+  const avatarMenu = document.getElementById('avatar-menu');
+  if (avatarMenu && !avatarMenu.contains(event.target)) {
+    avatarMenu.classList.add('d-none');
+    console.log('Avatar-Menü wurde geschlossen.');
+  }
+}
+
+/*document.addEventListener('DOMContentLoaded', () => {
+  const accessToken = localStorage.getItem('access_token');
+  if (!accessToken) {
+      // Kein Zugriffstoken gefunden -> Weiterleitung
+      alert('Du bist nicht eingeloggt. Bitte logge dich ein.');
+      window.location.href = 'Frontend/login.html';
+  }
+});*/
+
 const monthsName = [
   null,
   "Januar",
