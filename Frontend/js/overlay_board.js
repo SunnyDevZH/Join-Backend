@@ -523,10 +523,11 @@ function renderEditSubtaskHTML(newSubtask, i) {
         ${firstCharToUpperCase(newSubtask)} 
         <div class="subtasks-icons">
             <img onclick="editChosenSubtask(${i})" src="./icons/icon_edit.svg" alt="Edit">
-            <img onclick="deleteSubtask(${i})" src="./icons/icon_bucket.svg" alt="Delete">
+            <img onclick="deleteEditedSubtask(${i})" src="./icons/icon_bucket.svg" alt="Delete">
         </div>
     </div>`;
 }
+
 
 /**this function deletes subtasks
  * @param index displays the number of the subtask in the editedSubtasks Array
@@ -540,9 +541,9 @@ function deleteEditedSubtask(index) {
     subtaskContent.innerHTML = ''; // Inhalt löschen
 
     // Neu rendern, damit die Indizes korrekt bleiben
-    editedSubtasks.forEach((task, newIndex) => {
-        subtaskContent.innerHTML += renderEditSubtaskHTML(task.value, newIndex);
-    });
+    for (let i = 0; i < editedSubtasks.length; i++) {
+        subtaskContent.innerHTML += renderEditSubtaskHTML(editedSubtasks[i].value, i);
+    }
 }
 
 
