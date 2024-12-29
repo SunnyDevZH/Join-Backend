@@ -276,6 +276,7 @@ function allowDrop(ev) {
  */
 async function moveTo(category) {
   // Check if currentDraggedElement has a valid value
+
   if (currentDraggedElement === undefined || currentDraggedElement === 0) {
     console.error("Invalid task ID:", currentDraggedElement);
     return;

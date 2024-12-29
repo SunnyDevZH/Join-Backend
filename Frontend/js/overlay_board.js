@@ -7,6 +7,8 @@ let editedCol;
 let editedCategory;
 let editedCategoryColor;
 
+let currentEditIndex = null; // Speichert den aktuellen Bearbeitungsindex
+
 
 /**this function pushes all the categories of the board in the arrays taskCategories and taskcolors */
 async function pushCategories() {
@@ -459,37 +461,92 @@ function renderShowEditedSubtasks(subtaskCheckBox, i) {
 /**the user can edit more subtasks to the list */
 function editSubtask() {
     let subtaskElement = document.getElementById("subtaskContent");
-    let newSubtask = document.getElementById("subtask").value;
+    let newSubtask = document.getElementById("subtask").value.trim(); // Trim für saubere Eingabe
     let addButton = document.getElementById("addSubtaskButton");
+
+    // Validierung: Eingabe muss mindestens 3 Zeichen haben
     if (newSubtask.length < 3) {
-        addButton.disabled;
-    } else if (newSubtask.length >= 3) {
-        addButton.enabled;
+        addButton.disabled = true; // Button deaktivieren
+        return;
+    } else {
+        addButton.disabled = false; // Button aktivieren
+    }
+
+    if (currentEditIndex !== null) {
+        // Bearbeitung eines bestehenden Subtasks
+        editedSubtasks[currentEditIndex].value = newSubtask;
+
+        // Subtasks neu rendern
+        subtaskElement.innerHTML = ""; // Aktuelle Liste leeren
+        editedSubtasks.forEach((task, index) => {
+            subtaskElement.innerHTML += renderEditSubtaskHTML(task.value, index); // Index übergeben
+        });
+
+        // Reset der Bearbeitungslogik
+        currentEditIndex = null;
+        let img = document.getElementById("plus");
+        img.src = "./icons/plus.svg"; // Icon zurücksetzen
+        img.onclick = editSubtask; // Funktion zurücksetzen
+    } else {
+        // Hinzufügen eines neuen Subtasks
         let subtaskObj = {
             value: newSubtask,
             imageSrc: "./icons/checkbutton_default.svg",
             status: false,
         };
-        if (!editedSubtasks.includes(subtaskObj)) {
+
+        // Prüfen, ob Subtask bereits existiert (nach Wert)
+        if (!editedSubtasks.some(task => task.value === newSubtask)) {
+            // Subtask zur Liste hinzufügen
             editedSubtasks.push(subtaskObj);
-            subtaskElement.innerHTML += renderEditSubtaskHTML(newSubtask, i)
-        };
+
+            // Subtasks neu rendern mit Index
+            subtaskElement.innerHTML = ""; // Aktuelle Liste leeren
+            editedSubtasks.forEach((task, index) => {
+                subtaskElement.innerHTML += renderEditSubtaskHTML(task.value, index); // Index übergeben
+            });
+        }
     }
+
+    // Eingabefeld zurücksetzen
     document.getElementById("subtask").value = "";
 }
 
 
+
 /**html for the new subtasks */
 function renderEditSubtaskHTML(newSubtask, i) {
-    return `<div class="detailSubtask">
-    <img id="unchecked${editedSubtasks.length - 1}" 
-    onclick="changeCheckbox(${editedSubtasks.length - 1})" 
-    src="./icons/checkbutton_default.svg">${firstCharToUpperCase(newSubtask)} 
-    <div class="subtasks-icons">
-    <img onclick="editChosenSubtask(${i})" src="./icons/icon_edit.svg">
-    <img onclick="deleteSubtask(${i})" src="./icons/icon_bucket.svg">
+    return `<div class="detailSubtask" id="subtask-${i}">
+        <img id="unchecked${i}" 
+             onclick="changeCheckbox(${i})" 
+             src="./icons/checkbutton_default.svg">
+        ${firstCharToUpperCase(newSubtask)} 
+        <div class="subtasks-icons">
+            <img onclick="editChosenSubtask(${i})" src="./icons/icon_edit.svg" alt="Edit">
+            <img onclick="deleteSubtask(${i})" src="./icons/icon_bucket.svg" alt="Delete">
+        </div>
     </div>`;
 }
+
+/**this function deletes subtasks
+ * @param index displays the number of the subtask in the editedSubtasks Array
+ */
+function deleteEditedSubtask(index) {
+    // Entferne das Subtask-Objekt aus der Liste
+    editedSubtasks.splice(index, 1);
+
+    // Render die Liste neu, um die Indizes korrekt zu aktualisieren
+    let subtaskContent = document.getElementById('subtaskContent');
+    subtaskContent.innerHTML = ''; // Inhalt löschen
+
+    // Neu rendern, damit die Indizes korrekt bleiben
+    editedSubtasks.forEach((task, newIndex) => {
+        subtaskContent.innerHTML += renderEditSubtaskHTML(task.value, newIndex);
+    });
+}
+
+
+
 
 
 /**function to change the value of the chosen subtask
@@ -499,10 +556,14 @@ function editChosenSubtask(i) {
     let input = document.getElementById('subtask');
     input.value = editedSubtasks[i]['value'];
 
+    // Setze den Bearbeitungsindex
+    currentEditIndex = i;
+
     let img = document.getElementById('plus');
-    img.src = "./icons/icon_checkmark.svg";
-    img.onclick = function () { overwriteSubtask(i) };
+    img.src = "./icons/icon_checkmark.svg"; // Ändere Icon auf Checkmark
+    img.onclick = editSubtask; // Verknüpfe die Funktion erneut
 }
+
 
 
 /**this function overwrites the subtask in the editedSubtasksArray
@@ -567,7 +628,7 @@ async function getEditedTask(id) {
         prio: editedPrio,
         category: task.category,
         category_color: task.category_color,
-        subtasks: editedSubtasks.length > 0 ? editedSubtasks : task.subtasks, // Überprüfe, ob Subtasks bearbeitet wurden, andernfalls beibehalten
+        subtasks : editedSubtasks, // Überprüfe, ob Subtasks bearbeitet wurden, andernfalls beibehalten
     };
 
     console.log(editedTask); // Optional, aber hilft beim Debuggen
@@ -635,15 +696,6 @@ function clearAllEditTask() {
 }
 
 
-/**this function deletes subtasks
- * @param index displays the number of the subtask in the editedSubtasks Array
- */
-function deleteEditedSubtask(index) {
-    editedSubtasks.splice(index, 1);
-    let subtaskContent = document.getElementById('subtaskContent');
-    subtaskContent.innerHTML = '';
-    showEditedSubtasks();
-}
 
 
 /**resets the textcolor of the task */

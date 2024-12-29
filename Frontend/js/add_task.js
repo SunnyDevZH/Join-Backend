@@ -618,8 +618,8 @@ function keypressAddTask(event) {
 }
 
 
-/**this function changes the checkboxes when a subtask is done or not and overwrites the array
- * @param i displays the number of the subtask in the array
+/** This function toggles the checkbox state of a subtask and updates the array
+ * @param i The index of the subtask in the array
  */
 function checkSubtask(i) {
   let checkbox = document.getElementById(`subtaskImage${i}`);
@@ -635,17 +635,24 @@ function checkSubtask(i) {
 }
 
 
-/**this function deletes the subtask
- * @param index displays the number of the subtask in the subtaskarray
+
+/** This function deletes a subtask and re-renders the list
+ * @param index displays the number of the subtask in the subtask array
  */
 function deleteSubtask(index) {
+  // Entferne das Subtask-Objekt aus dem Array
   assignedSubtasks.splice(index, 1);
+
+  // Aktualisiere die HTML-Liste
   let subtaskContent = document.getElementById("subtaskContent");
-  subtaskContent.innerHTML = "";
+  subtaskContent.innerHTML = ""; // Liste leeren
+
+  // Neu rendern: Alle verbleibenden Subtasks anzeigen
   assignedSubtasks.forEach((subtaskObj, i) => {
     subtaskContent.innerHTML += renderSubtaskHTML(subtaskObj, i);
   });
 }
+
 
 
 /** resets ALL Subtasks*/
@@ -654,6 +661,20 @@ function resetSubtasks() {
   subtaskContent.innerHTML = "";
   assignedSubtasks = [];
 }
+
+/** HTML for the subtask list
+ * @param subtaskObj This is the object containing all information for the subtask
+ * @param i The index of the subtask in the array
+ */
+function renderSubtaskHTML(subtaskObj, i) {
+  return `<div class="option" id="subtask-${i}"> 
+    <img id="subtaskImage${i}" onclick="checkSubtask(${i})" src="${subtaskObj.imageSrc}"> 
+    ${subtaskObj.value}
+    <img id="subtaskBucket${i}" onclick="deleteSubtask(${i})" src="./icons/icon_bucket.svg">
+    </div>`;
+}
+
+
 
 
 /** function to getRandomColor for the new Categories */
@@ -719,13 +740,3 @@ function renderContactHTML(contact, contactColor, i) {
 }
 
 
-/**html for the subtasklist
- * @param subtaskObj this is the array for all the infromations of the subtask
- * @param i displays the chosen subtask and gives different ids to the html ids and the functions 
- */
-function renderSubtaskHTML(subtaskObj, i) {
-  return `<div class="option"> 
-    <img id="subtaskImage${i}" onclick="checkSubtask(${i})" src="${subtaskObj.imageSrc}"> ${subtaskObj.value}
-    <img id="subtaskBucket${i}" onclick="deleteSubtask(${i})" src="./icons/icon_bucket.svg">
-    </div>`;
-}
