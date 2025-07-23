@@ -7,10 +7,10 @@ Es stellt Backend-Logik wie Benutzerregistrierung, Authentifizierung und API-End
 
 ## 🚀 Funktionen
 
-1. Benutzerregistrierung & Anmeldung  
-2. Authentifizierung & Autorisierung via JWT  
-3. REST-API zur Verwaltung von Benutzerdaten  
-4. Datenbankintegration (SQLite)  
+- Benutzerregistrierung & Anmeldung  
+- Authentifizierung & Autorisierung via JWT  
+- REST-API zur Verwaltung von Benutzerdaten  
+- Datenbankintegration (SQLite)  
 
 ---
 
