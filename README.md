@@ -40,19 +40,23 @@ python3 -m venv env
 ```bash
 source env/bin/activate
 ```
-### 3. Migrationen ausführen
+### 3. Abhängigkeiten installieren
+```bash
+pip3 install -r requirements.txt
+```
+### 4. Migrationen ausführen
 ```bash
 python3 manage.py migrate
 ```
-### 4. Entwicklungsserver starten
+### 5. Entwicklungsserver starten
 ```bash
 python3 manage.py runserver
 ```
-### 5. Anwendung im Browser öffnen
+### 6. Anwendung im Browser öffnen
 ```bash
 http://localhost:8000/admin
 ```
-### 6. Superuser anlegen
+### 7. Superuser anlegen
 ```bash
 python3 manage.py createsuperuser
 ```
