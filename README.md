@@ -16,11 +16,11 @@ Es stellt Backend-Logik wie Benutzerregistrierung, Authentifizierung und API-End
 
 ## 🛠️ Technologien
 
-**Python**: Programmiersprache ```
-**Django**: Web-Framework ```
-**Django REST Framework**: API-Entwicklung ```
-**SQLite**: Datenbank ```
-**JWT**: Authentifizierung mit JSON Web Tokens ```
+- **Python**: Programmiersprache
+- **Django**: Web-Framework
+- **Django REST Framework**: API-Entwicklung
+- **SQLite**: Datenbank
+- **JWT**: Authentifizierung mit JSON Web Tokens
 
 ---
 
