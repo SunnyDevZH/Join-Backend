@@ -34,6 +34,7 @@ cd Backend
 python3 -m venv env
 source env/bin/activate
 
+
 ### 3. Migrationen ausführen
 python3 manage.py migrate
 
@@ -44,5 +45,6 @@ python3 manage.py runserver
 http://localhost:8000/admin
 
 ### 6. Superuser anlegen
+```bash
 python3 manage.py createsuperuser
 
